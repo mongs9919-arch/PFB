@@ -464,15 +464,6 @@ textarea{resize:vertical;line-height:1.6;}
       </div>
     </div>
 
-    <!-- 변경점 리포트 (기준본 있을 때만) -->
-    <div id="reportSection" style="display:none">
-      <div class="section-label no-print"><span>변경점 리포트 — 인쇄/PDF용</span></div>
-      <div style="display:flex;gap:8px;margin-bottom:10px" class="no-print">
-        <button class="btn btn-o btn-sm" onclick="window.print()">🖨 인쇄 / PDF 저장</button>
-      </div>
-      <div id="reportOut"></div>
-    </div>
-
   </div>
 </div>
 </div>
@@ -1117,7 +1108,7 @@ function renderAll(hasBase){
 
   if(hasBase){
     document.getElementById('changeSection').style.display='block';
-    document.getElementById('reportSection').style.display='block';
+    
     document.getElementById('baseChartCard').style.display='block';
     renderChangeStats();
     renderMonthDiff();
@@ -1125,7 +1116,7 @@ function renderAll(hasBase){
     renderReport();
   } else {
     document.getElementById('changeSection').style.display='none';
-    document.getElementById('reportSection').style.display='none';
+    
     document.getElementById('baseChartCard').style.display='none';
   }
 }
