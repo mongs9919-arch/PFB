@@ -195,17 +195,16 @@ textarea{resize:vertical;line-height:1.6;}
 <body>
 <div class="shell">
 
+
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="logo">PSK<span>/</span>FCST<span>/</span>MGR <span style="font-size:10px;color:var(--text3)">v3</span></div>
+  <div class="logo">PFB <span style="font-size:10px;color:var(--text3);font-weight:400">PSK FCST Board</span></div>
   <div class="week-chip" id="weekChip">W— · —</div>
   <div style="font-size:11px;color:var(--text3);margin-left:4px" id="dataStatus">데이터 없음</div>
   <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
-    <span id="autoSaveStatus" style="font-size:10px;color:var(--text3)"></span>
-    <!-- 클라우드 동기화 -->
     <span id="cloudStatus" style="font-size:10px;color:var(--text3);font-family:var(--mono)"></span>
-    <button class="btn btn-g btn-sm" onclick="saveToCloud()" title="클라우드에 저장">☁️ 저장</button>
-    <button class="btn btn-o btn-sm" onclick="loadFromCloud()" title="클라우드에서 불러오기">☁️ 불러오기</button>
+    <button class="btn btn-g btn-sm" onclick="saveToCloud()">☁️ 저장</button>
+    <button class="btn btn-o btn-sm" onclick="loadFromCloud()">☁️ 불러오기</button>
     <!-- 글씨 크기 조절 -->
     <div style="display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px 8px">
       <span style="font-size:10px;color:var(--text3)">가</span>
@@ -215,15 +214,12 @@ textarea{resize:vertical;line-height:1.6;}
       <span style="font-size:13px;color:var(--text3)">가</span>
       <span id="fontSizeLabel" style="font-size:10px;color:var(--text2);font-family:var(--mono);min-width:24px">14</span>
     </div>
-    <!-- 다크/라이트 모드 토글 -->
     <button id="themeToggle" onclick="toggleTheme()" class="btn btn-o btn-sm" style="font-size:13px;padding:5px 10px" title="다크/라이트 모드">🌙</button>
-    <button class="btn btn-o btn-sm" onclick="saveBackup()">💾 백업</button>
-    <button class="btn btn-o btn-sm" onclick="document.getElementById('loadBackupInput').click()">📂 불러오기</button>
-    <input type="file" id="loadBackupInput" accept=".json" style="display:none" onchange="loadBackup(event)">
   </div>
   <div class="tab-bar">
     <div class="tab active" onclick="go('input')">📋 종합표 입력</div>
     <div class="tab" onclick="go('dashboard')">🏠 대시보드</div>
+    <div class="tab" onclick="go('edit')">✏️ 항목 편집</div>
     <div class="tab" onclick="go('history')">🔄 변경이력</div>
     <div class="tab" onclick="go('export')">📥 SAP추출</div>
     <div class="tab" onclick="go('lotmaster')">⚙ LOT기준표</div>
@@ -304,8 +300,24 @@ textarea{resize:vertical;line-height:1.6;}
       ② 다음달에 새 종합표 붙여넣고 <b style="color:var(--blue)">분석 실행</b> → 자동으로 변경점 비교
     </div>
   </div>
+</div>
 
-  <!-- 결과 영역 (분석 후 표시) -->
+
+
+<!-- ══ PAGE: 대시보드 ══ -->
+<div class="page" id="page-dashboard">
+  <div id="dash-stats" class="stat-row"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">설비군별 현황 (이번달)</div>
+      <div id="dash-typeChart"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">설비군별 현황 (전달기준)</div>
+      <div id="dash-typeChartBase"></div>
+    </div>
+  </div>
+<!-- 결과 영역 (분석 후 표시) -->
   <div id="resultSection" style="display:none">
 
     <!-- 상단 통계 -->
@@ -484,27 +496,16 @@ textarea{resize:vertical;line-height:1.6;}
 
   </div>
 </div>
+</div>
 
-<!-- ══ PAGE: 대시보드 ══ -->
-<div class="page" id="page-dashboard">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-    <div style="font-size:12px;color:var(--text2)">종합표 입력 탭에서 분석하면 여기도 업데이트됩니다</div>
-    <button class="btn btn-o btn-sm" onclick="go('input')">← 종합표 입력으로</button>
-  </div>
-  <div class="stat-row" id="dash-stats"></div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">설비군별 현황 (이번달)</div>
-      <div id="dash-typeChart"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">설비군별 현황 (전달기준)</div>
-      <div id="dash-typeChartBase"></div>
-    </div>
-  </div>
+<!-- ══ PAGE: 항목 편집 ══ -->
+<div class="page" id="page-edit">
   <div class="card">
     <div class="sec-hdr">
-      <div class="card-title" style="margin:0">전체 항목 목록 <span style="font-size:10px;color:var(--text3);font-weight:400">— 행 클릭하면 편집</span></div>
+      <div>
+        <div class="card-title" style="margin:0">✏️ 전체 항목 편집</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">행 클릭하면 편집 팝업 열림</div>
+      </div>
       <button class="btn btn-g btn-sm" onclick="openAddItem()">+ 신규 추가</button>
     </div>
     <div class="tbl-wrap tall">
@@ -1082,11 +1083,10 @@ function runAll(){
   buildMonthOpts();
   buildLotFilter();
   renderAll(hasBase);
-  document.getElementById('resultSection').style.display='block';
   updateBaselineBanner();
-  toast(`✓ 분석 완료 ${parsed.length}건${hasBase?` · 변경 ${changed}건 신규 ${added}건 삭제 ${removed}건`:''}`);
-  // 자동 클라우드 저장
+  toast(`✓ 분석 완료 ${parsed.length}건${hasBase?` · 변경 ${changed}건 신규 ${added}건 삭제 ${removed}건`:''} → 대시보드로 이동합니다`);
   saveToCloud();
+  setTimeout(()=>go('dashboard'), 800);
 }
 
 function buildCompare(base,final){
@@ -2900,7 +2900,15 @@ function go(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.querySelector(`.tab[onclick="go('${id}')"]`).classList.add('active');
-  if(id==='dashboard') renderDash();
+  if(id==='dashboard'){
+    renderDash();
+    const rs=document.getElementById('resultSection');
+    if(rs&&curData.length) rs.style.display='block';
+  }
+  else if(id==='input'){
+    // nothing extra
+  }
+  else if(id==='edit') renderDash();
   else if(id==='history') renderHistory();
   else if(id==='export') renderExport();
   else if(id==='lotmaster') renderLotMaster();
