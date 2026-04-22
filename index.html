@@ -476,9 +476,19 @@ textarea{resize:vertical;line-height:1.6;}
         <div class="card-title" style="margin:0">✏️ 전체 항목 편집</div>
         <div style="font-size:11px;color:var(--text3);margin-top:2px">행 클릭하면 편집 팝업 열림</div>
       </div>
-      <button class="btn btn-g btn-sm" onclick="openAddItem()">+ 신규 추가</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div style="position:relative">
+          <input id="editSearchInput" type="text" placeholder="🔍 LOT / W/O / 모델 / 라인 검색..."
+            oninput="filterEditTable()"
+            style="width:280px;padding-left:14px;font-size:12px;height:34px;border-radius:8px">
+          <span id="editSearchClear" onclick="document.getElementById('editSearchInput').value='';filterEditTable();"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);font-size:14px;display:none">✕</span>
+        </div>
+        <span id="editFilterCount" style="font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap"></span>
+        <button class="btn btn-g btn-sm" onclick="openAddItem()">+ 신규 추가</button>
+      </div>
     </div>
-    <div class="tbl-wrap">
+    <div class="tbl-wrap tall">
       <table>
         <thead><tr>
           <th>유효LOT</th><th>A+0 납품일</th><th>생산완료일</th><th>W/O</th><th>모델코드</th><th>모델</th><th>설비군</th>
@@ -2365,6 +2375,25 @@ function renderDash(){
     <td><button class="btn btn-o btn-sm" style="font-size:10px;padding:3px 8px" onclick="event.stopPropagation();openEditItem(${realIdx})">✏</button></td>
   </tr>`;
   }).join('')||'<tr><td colspan="14" class="empty">데이터 없음</td></tr>';
+}
+
+// ── 항목편집 검색 필터 ──
+function filterEditTable(){
+  const q=document.getElementById('editSearchInput').value.trim().toLowerCase();
+  const clearBtn=document.getElementById('editSearchClear');
+  const countEl=document.getElementById('editFilterCount');
+  if(clearBtn) clearBtn.style.display=q?'block':'none';
+
+  const rows=document.querySelectorAll('#dash-allRows tr');
+  let visible=0;
+  rows.forEach(tr=>{
+    if(!q){tr.style.display='';visible++;return;}
+    const text=tr.textContent.toLowerCase();
+    const match=text.includes(q);
+    tr.style.display=match?'':'none';
+    if(match) visible++;
+  });
+  if(countEl) countEl.textContent=q?`${visible}건 검색됨`:'';
 }
 
 // ── 항목 편집 ──
