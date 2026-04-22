@@ -33,31 +33,26 @@ body.light{
   --red:#c03030;--red-dim:#ffe0e0;
   --purple:#6040c0;--purple-dim:#ede8ff;
   --cyan:#1080a0;--cyan-dim:#d0f0f8;
-  --mono:'DM Mono',monospace;
-  --sans:'Noto Sans KR',-apple-system,sans-serif;
 }
-
 /* ── TOPBAR ── */
-.topbar{display:flex;align-items:center;gap:12px;padding:0 20px;height:52px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
-.logo{font-family:var(--mono);font-size:13px;color:var(--blue);letter-spacing:.12em;font-weight:500;white-space:nowrap;}
-.logo span{color:var(--text3);}
+.topbar{display:flex;align-items:center;gap:12px;padding:0 20px;height:56px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.logo{font-family:var(--mono);font-size:20px;color:var(--blue);letter-spacing:.1em;font-weight:600;white-space:nowrap;}
+.logo-sub{font-size:11px;color:var(--text3);font-family:var(--sans);font-weight:400;margin-left:6px;}
 .week-chip{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:3px 10px;font-family:var(--mono);font-size:10px;color:var(--text2);white-space:nowrap;}
 .tab-bar{display:flex;gap:1px;margin-left:auto;background:var(--bg3);border-radius:8px;padding:3px;}
 .tab{padding:5px 14px;border-radius:6px;cursor:pointer;font-size:11px;color:var(--text2);transition:.15s;white-space:nowrap;}
 .tab:hover{color:var(--text);background:var(--bg4);}
 .tab.active{background:var(--blue-dim);color:var(--blue);font-weight:500;}
-
 /* ── LAYOUT ── */
 .shell{display:flex;flex-direction:column;height:100vh;}
-.main{flex:1;overflow:hidden;display:flex;}
-.page{display:none;flex:1;overflow-y:auto;padding:20px 24px;flex-direction:column;gap:14px;}
+.main{flex:1;overflow:auto;display:flex;flex-direction:column;}
+.page{display:none;flex:1;padding:20px 24px;flex-direction:column;gap:14px;}
 .page.active{display:flex;}
-
+#page-edit{padding:12px;gap:0;}
 /* ── CARDS ── */
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
 .card-title{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;}
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;flex-wrap:wrap;}
-
 /* ── STATS ── */
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
 .stat-row-5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
@@ -67,10 +62,10 @@ body.light{
 .stat-val{font-size:24px;font-weight:600;font-family:var(--mono);line-height:1;}
 .stat-sub{font-size:10px;color:var(--text2);margin-top:4px;}
 .c-blue{color:var(--blue);}.c-green{color:var(--green);}.c-amber{color:var(--amber);}.c-red{color:var(--red);}.c-purple{color:var(--purple);}
-
 /* ── TABLE ── */
 .tbl-wrap{overflow:auto;border-radius:8px;border:1px solid var(--border);}
 .tbl-wrap.tall{max-height:440px;}
+.tbl-wrap.fullh{max-height:calc(100vh - 180px);}
 table{width:100%;border-collapse:collapse;font-size:12px;}
 thead th{background:var(--bg3);color:var(--text2);font-weight:500;padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;font-size:11px;letter-spacing:.04em;position:sticky;top:0;z-index:2;}
 tbody tr{border-bottom:1px solid var(--border);transition:.1s;}
@@ -79,7 +74,6 @@ tbody tr:hover{background:rgba(74,140,255,.05);}
 tbody td{padding:8px 10px;white-space:nowrap;}
 .mono{font-family:var(--mono);font-size:12px;}
 .empty{text-align:center;color:var(--text3);padding:36px 20px;font-size:12px;line-height:2;}
-
 /* ── BADGES ── */
 .badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:600;font-family:var(--mono);letter-spacing:.04em;}
 .bg-g{background:var(--blue-dim);color:var(--blue);}
@@ -91,7 +85,6 @@ tbody td{padding:8px 10px;white-space:nowrap;}
 .bg-new{background:var(--green-dim);color:var(--green);}
 .bg-chg{background:var(--amber-dim);color:var(--amber);}
 .bg-del{background:var(--red-dim);color:var(--red);}
-
 /* ── FORMS ── */
 input,select,textarea{background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:7px;padding:8px 11px;font-size:12px;font-family:var(--sans);outline:none;transition:.15s;}
 input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(74,140,255,.12);}
@@ -104,11 +97,9 @@ textarea{resize:vertical;line-height:1.6;}
 .btn-a{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,.2);}
 .btn-r{background:var(--red-dim);color:var(--red);border:1px solid rgba(224,68,68,.2);}
 .btn-sm{padding:5px 11px;font-size:11px;}
-
 /* ── PASTE AREA ── */
 .paste-area{width:100%;height:150px;font-family:var(--mono);font-size:11px;background:var(--bg3);border:1px dashed var(--border3);border-radius:8px;padding:12px;color:var(--text);}
 .paste-area:focus{border-style:solid;border-color:var(--blue);}
-
 /* ── BAR CHART ── */
 .bar-wrap{display:flex;gap:0;align-items:flex-end;height:110px;padding-top:4px;}
 .bc{display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;min-width:0;}
@@ -119,36 +110,30 @@ textarea{resize:vertical;line-height:1.6;}
 .legend{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;}
 .li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2);}
 .ld{width:8px;height:8px;border-radius:2px;}
-
 /* ── TYPE BAR ── */
 .type-row{margin-bottom:8px;}
 .type-meta{display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px;align-items:center;}
 .type-track{background:var(--bg3);border-radius:4px;height:5px;overflow:hidden;}
 .type-fill{height:100%;border-radius:4px;transition:.6s cubic-bezier(.4,0,.2,1);}
-
 /* ── GRID ── */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-
 /* ── COLUMN GUIDE ── */
 .col-guide{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0 4px;}
 .cg{background:var(--bg4);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:10px;font-family:var(--mono);color:var(--text2);}
 .cg.hi{border-color:var(--amber);color:var(--amber);background:var(--amber-dim);}
 .cg span{color:var(--text3);margin-right:3px;}
-
 /* ── CHANGE ROW ── */
 .row-new td:first-child{border-left:2px solid var(--green);}
 .row-chg td:first-child{border-left:2px solid var(--amber);}
 .row-del td:first-child{border-left:2px solid var(--red);}
 .old{color:var(--red);text-decoration:line-through;font-family:var(--mono);font-size:11px;}
 .new{color:var(--green);font-family:var(--mono);font-size:11px;font-weight:500;}
-
 /* ── SECTION DIVIDER ── */
 .section-label{display:flex;align-items:center;gap:10px;margin:4px 0;}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
 .section-label span{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;}
-
-/* ── REPORT (print) ── */
+/* ── REPORT ── */
 .rpt-doc{background:#fff;color:#1a1a1a;padding:24px 28px;border-radius:10px;border:1px solid var(--border);font-family:'Noto Sans KR','Malgun Gothic',sans-serif;}
 .rpt-title{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:20px;padding-bottom:8px;border-bottom:2px solid #1a1a1a;}
 .rpt-type-block{margin-bottom:24px;}
@@ -160,28 +145,22 @@ textarea{resize:vertical;line-height:1.6;}
 .rpt-table th{background:#f0f0f0;color:#333;font-weight:600;padding:4px 7px;text-align:left;border:1px solid #ccc;white-space:nowrap;font-size:9px;}
 .rpt-table td{padding:4px 7px;border:1px solid #ddd;vertical-align:top;}
 .rpt-table tr:nth-child(even) td{background:#fafafa;}
-.rpt-tag-lot{color:#c00;font-weight:600;}
-.rpt-tag-new{color:#070;font-weight:600;}
-.rpt-tag-del{color:#c00;font-weight:600;}
-.rpt-tag-line{color:#00c;font-weight:600;}
-.rpt-tag-qty{color:#a06000;font-weight:600;}
-.rpt-empty{color:#888;font-style:italic;font-size:11px;padding:5px;}
+.rpt-tag-lot{color:#c00;font-weight:600;}.rpt-tag-new{color:#070;font-weight:600;}.rpt-tag-del{color:#c00;font-weight:600;}.rpt-tag-line{color:#00c;font-weight:600;}.rpt-tag-qty{color:#a06000;font-weight:600;}.rpt-empty{color:#888;font-style:italic;font-size:11px;padding:5px;}
 .rpt-summary-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:18px;}
 .rpt-summary-tbl th{background:#e8e8e8;padding:5px 8px;border:1px solid #ccc;font-weight:600;}
 .rpt-summary-tbl td{padding:5px 8px;border:1px solid #ddd;text-align:center;}
-
 /* ── BASELINE BANNER ── */
 .baseline-banner{background:var(--green-dim);border:1px solid rgba(46,204,142,.25);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:11px;}
 .no-baseline-banner{background:var(--amber-dim);border:1px solid rgba(240,160,32,.25);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:11px;}
-
 /* ── TOAST ── */
 #toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--bg3);border:1px solid var(--green);color:var(--green);border-radius:8px;padding:11px 16px;font-size:12px;opacity:0;transition:.3s;pointer-events:none;font-family:var(--mono);}
 #toast.show{opacity:1;}
-
+::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
-
-@media print {
+#page-edit{padding:0;gap:0;}
+#page-edit .card{height:100%;}
+@media print{
   .shell>.topbar,.shell>.main>.page:not(#page-input){display:none!important;}
   #page-input{display:block!important;padding:0;overflow:visible;}
   .card:first-child,.no-print{display:none!important;}
@@ -198,7 +177,7 @@ textarea{resize:vertical;line-height:1.6;}
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="logo">PFB <span style="font-size:10px;color:var(--text3);font-weight:400">PSK FCST Board</span></div>
+  <div class="logo">PFB <span class="logo-sub">PSK FCST Board</span></div>
   <div class="week-chip" id="weekChip">W— · —</div>
   <div style="font-size:11px;color:var(--text3);margin-left:4px" id="dataStatus">데이터 없음</div>
   <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
@@ -508,7 +487,7 @@ textarea{resize:vertical;line-height:1.6;}
       </div>
       <button class="btn btn-g btn-sm" onclick="openAddItem()">+ 신규 추가</button>
     </div>
-    <div class="tbl-wrap tall">
+    <div class="tbl-wrap">
       <table>
         <thead><tr>
           <th>유효LOT</th><th>A+0 납품일</th><th>생산완료일</th><th>W/O</th><th>모델코드</th><th>모델</th><th>설비군</th>
@@ -527,7 +506,7 @@ textarea{resize:vertical;line-height:1.6;}
       <div class="card-title" style="margin:0">분석 이력</div>
       <div style="font-size:11px;color:var(--text3)" id="histCountLabel">0회</div>
     </div>
-    <div class="tbl-wrap tall">
+    <div class="tbl-wrap" style="max-height:280px">
       <table>
         <thead><tr>
           <th>분석 일시</th><th>총 항목</th><th>총 대수</th><th>신규</th><th>변경</th><th>삭제</th><th>기준본 비교</th>
@@ -536,9 +515,9 @@ textarea{resize:vertical;line-height:1.6;}
       </table>
     </div>
   </div>
-  <div class="card">
+  <div class="card" style="flex:1;display:flex;flex-direction:column;min-height:200px">
     <div class="card-title">W/O별 변경 기록</div>
-    <div class="tbl-wrap tall">
+    <div class="tbl-wrap" style="flex:1">
       <table>
         <thead><tr><th>일시</th><th>W/O</th><th>모델</th><th>변경항목</th><th>변경 전</th><th>변경 후</th></tr></thead>
         <tbody id="detailHistTbl"></tbody>
@@ -605,16 +584,24 @@ textarea{resize:vertical;line-height:1.6;}
   <div class="card">
     <div class="sec-hdr">
       <div>
-        <div class="card-title">LOT 기준표 관리</div>
-        <div style="font-size:11px;color:var(--text2)">LOT별 A+0 납품일·생산완료일·출하가능일 기준</div>
+        <div class="card-title">⚙ LOT 기준표</div>
+        <div style="font-size:11px;color:var(--text2)">엑셀에서 LOT·납품일·생산완료일·출하가능일 4열 복붙 → 적용</div>
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="btn btn-g btn-sm" onclick="openAddLot()">+ LOT 추가</button>
+        <button class="btn btn-g btn-sm" onclick="applyLotPaste()">✓ 붙여넣기 적용</button>
         <button class="btn btn-p btn-sm" onclick="saveLotMaster()">💾 저장</button>
+        <button class="btn btn-r btn-sm" onclick="if(confirm('전체 삭제?')){LOT_MASTER={};renderLotMaster();}">🗑 전체삭제</button>
       </div>
     </div>
-    <div style="margin-bottom:10px;font-size:10px;color:var(--text3)">* 날짜 형식: YYYYMMDD</div>
-    <div class="tbl-wrap tall">
+    <!-- 복붙 영역 -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:6px">
+        📋 엑셀에서 복붙 — 열 순서: <span style="color:var(--amber);font-family:var(--mono)">LOT번호 | A+0납품일(YYYYMMDD) | 생산완료일(YYYYMMDD) | 출하가능일(YYYYMMDD)</span>
+      </div>
+      <textarea id="lotPasteArea" class="paste-area" style="height:100px" placeholder="엑셀에서 4열 복붙 (헤더행 포함해도 자동감지)&#10;예: 101	20260106	20260122	20260123"></textarea>
+    </div>
+    <!-- 현재 기준표 -->
+    <div class="tbl-wrap fullh">
       <table>
         <thead><tr><th>LOT</th><th>A+0 (납품일)</th><th>생산완료일</th><th>출하가능일</th><th>삭제</th></tr></thead>
         <tbody id="lotMasterTbl"></tbody>
@@ -2796,6 +2783,27 @@ function renderLotMaster(){
     </tr>`).join('');
 }
 function deleteLot(idx){ if(!confirm('삭제?')) return; lotDataAll.splice(idx,1); renderLotMaster(); }
+function applyLotPaste(){
+  const raw=document.getElementById('lotPasteArea').value.trim();
+  if(!raw){toast('붙여넣을 데이터가 없습니다','a');return;}
+  const lines=raw.split(/\n/).map(l=>l.trim()).filter(Boolean);
+  let added=0,skipped=0;
+  lines.forEach(line=>{
+    const cols=line.split(/\t/);
+    if(cols.length<2) return;
+    const lot=parseInt(cols[0]);
+    if(isNaN(lot)){skipped++;return;}
+    const a0=(cols[1]||'').trim().replace(/-/g,'');
+    const prod=(cols[2]||'').trim().replace(/-/g,'');
+    const ship=(cols[3]||'').trim().replace(/-/g,'');
+    if(!a0){skipped++;return;}
+    LOT_MASTER[lot]=[a0,prod||a0,ship||a0];
+    added++;
+  });
+  renderLotMaster();
+  document.getElementById('lotPasteArea').value='';
+  toast(`✓ ${added}개 LOT 적용${skipped?` (${skipped}행 스킵)`:''}`);}
+
 function openAddLot(){ ['alLot','alA0','alProd','alShip'].forEach(id=>document.getElementById(id).value=''); document.getElementById('mAddLot').style.display='flex'; }
 function applyAddLot(){
   const lot=parseInt(document.getElementById('alLot').value);
