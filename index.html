@@ -614,6 +614,17 @@ textarea{resize:vertical;line-height:1.6;}
 </div><!-- .main -->
 </div><!-- .shell -->
 
+<!-- MODAL: 변경 상세 -->
+<div class="modal-bg" id="mChangeSummary" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(3px);">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:24px;width:820px;max-width:96vw;max-height:88vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div style="font-size:15px;font-weight:600">📋 변경 내역 상세</div>
+      <button class="btn btn-o btn-sm" onclick="closeModal('mChangeSummary')">✕</button>
+    </div>
+    <div id="changeSummaryContent"></div>
+  </div>
+</div>
+
 <!-- MODAL: 항목 편집 -->
 <div class="modal-bg" id="mEditItem" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(3px);">
   <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:24px;width:600px;max-width:96vw;max-height:90vh;overflow-y:auto">
@@ -1172,13 +1183,13 @@ function renderTopStats(hasBase){
     </div>`).join('')}`;
   if(hasBase){
     html+=`
-    <div class="stat"><div class="stat-label">신규/변경/삭제</div>
+    <div class="stat" onclick="openChangeSummaryModal()" style="cursor:pointer" title="클릭하면 변경 상세 보기"><div class="stat-label">신규/변경/삭제</div>
       <div style="display:flex;gap:6px;align-items:baseline;margin-top:2px">
         <span style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--green)">+${added}</span>
         <span style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--amber)">${changed}</span>
         <span style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--red)">-${removed}</span>
       </div>
-      <div class="stat-sub">신규 · 변경 · 삭제</div></div>`;
+      <div class="stat-sub">신규 · 변경 · 삭제 <span style="color:var(--blue);font-size:9px">▶ 상세보기</span></div></div>`;
   } else {
     const byType={GENEVA:0,ECOLITE:0,HDW:0,SOURCE:0,개발설비:0};
     curData.forEach(r=>{const t=gtype(r.model);if(byType[t]!==undefined)byType[t]+=finalQty(r);});
@@ -2394,6 +2405,75 @@ function filterEditTable(){
     if(match) visible++;
   });
   if(countEl) countEl.textContent=q?`${visible}건 검색됨`:'';
+}
+
+// ── 변경 상세 팝업 ──
+function openChangeSummaryModal(){
+  if(!compareResult.length){toast('기준본이 없어 비교 불가','a');return;}
+  const added=compareResult.filter(d=>d.status==='added');
+  const changed=compareResult.filter(d=>d.status==='changed');
+  const removed=compareResult.filter(d=>d.status==='removed');
+
+  const rowHtml=(d,color)=>{
+    const r=d.final||d.base;
+    return `<tr>
+      <td class="mono" style="color:var(--blue)">${effLot(r)}</td>
+      <td class="mono" style="font-size:11px">${d.wo}</td>
+      <td style="font-size:11px">${r.model}</td>
+      <td>${tbadge(gtype(r.model))}</td>
+      <td style="font-size:11px;color:var(--text2)">${r.line||r.cust||'—'}</td>
+      <td style="font-size:11px;color:var(--text2)">${fd(getPart(r))}</td>
+      <td class="mono" style="font-weight:600">${finalQty(r)}</td>
+      <td style="font-size:11px;color:${color};font-weight:600">${
+        d.status==='added'?'신규추가':
+        d.status==='removed'?'삭제':
+        d.changes?(d.changes.map(c=>`${c.field}: ${c.before}→${c.after}`).join(', ')):'변경'
+      }</td>
+    </tr>`;
+  };
+
+  const tableHead=`<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px">
+    <thead><tr style="background:var(--bg3)">
+      <th style="padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;color:var(--text2)">LOT</th>
+      <th style="padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;color:var(--text2)">W/O</th>
+      <th style="padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;color:var(--text2)">모델</th>
+      <th style="padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;color:var(--text2)">설비군</th>
+      <th style="padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;color:var(--text2)">라인</th>
+      <th style="padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;color:var(--text2)">납품일</th>
+      <th style="padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;color:var(--text2)">수량</th>
+      <th style="padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;color:var(--text2)">변경내용</th>
+    </tr></thead><tbody>`;
+
+  let html='';
+
+  if(added.length){
+    html+=`<div style="margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:8px">
+        <span style="background:var(--green-dim);border:1px solid rgba(46,204,142,.3);padding:3px 10px;border-radius:5px">✚ 신규 추가 ${added.length}건</span>
+      </div>
+      ${tableHead}${added.map(d=>rowHtml(d,'var(--green)')).join('')}</tbody></table>
+    </div>`;
+  }
+  if(changed.length){
+    html+=`<div style="margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:8px;display:flex;align-items:center;gap:8px">
+        <span style="background:var(--amber-dim);border:1px solid rgba(240,160,32,.3);padding:3px 10px;border-radius:5px">✎ 변경 ${changed.length}건</span>
+      </div>
+      ${tableHead}${changed.map(d=>rowHtml(d,'var(--amber)')).join('')}</tbody></table>
+    </div>`;
+  }
+  if(removed.length){
+    html+=`<div style="margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px">
+        <span style="background:var(--red-dim);border:1px solid rgba(224,68,68,.3);padding:3px 10px;border-radius:5px">✕ 삭제 ${removed.length}건</span>
+      </div>
+      ${tableHead}${removed.map(d=>rowHtml(d,'var(--red)')).join('')}</tbody></table>
+    </div>`;
+  }
+  if(!html) html=`<div class="empty">변경사항 없음</div>`;
+
+  document.getElementById('changeSummaryContent').innerHTML=html;
+  document.getElementById('mChangeSummary').style.display='flex';
 }
 
 // ── 항목 편집 ──
