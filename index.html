@@ -476,19 +476,56 @@ textarea{resize:vertical;line-height:1.6;}
         <div class="card-title" style="margin:0">✏️ 전체 항목 편집</div>
         <div style="font-size:11px;color:var(--text3);margin-top:2px">행 클릭하면 편집 팝업 열림</div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <div style="position:relative">
-          <input id="editSearchInput" type="text" placeholder="🔍 LOT / W/O / 모델 / 라인 검색..."
-            oninput="filterEditTable()"
-            style="width:280px;padding-left:14px;font-size:12px;height:34px;border-radius:8px">
-          <span id="editSearchClear" onclick="document.getElementById('editSearchInput').value='';filterEditTable();"
-            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);font-size:14px;display:none">✕</span>
-        </div>
-        <span id="editFilterCount" style="font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap"></span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span id="editFilterCount" style="font-size:11px;color:var(--text3);font-family:var(--mono)"></span>
+        <button class="btn btn-o btn-sm" onclick="clearEditFilters()">초기화</button>
         <button class="btn btn-g btn-sm" onclick="openAddItem()">+ 신규 추가</button>
       </div>
     </div>
-    <div class="tbl-wrap" style="max-height:calc(100vh - 200px)">
+    <!-- 필터 행 -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding:10px 12px;background:var(--bg3);border-radius:8px;border:1px solid var(--border)">
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:9px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em">LOT</span>
+        <input id="fLot" type="text" placeholder="예: 122" oninput="filterEditTable()" style="width:70px;height:28px;font-size:11px;padding:4px 8px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:9px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em">W/O</span>
+        <input id="fWo" type="text" placeholder="HC603..." oninput="filterEditTable()" style="width:100px;height:28px;font-size:11px;padding:4px 8px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:9px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em">모델</span>
+        <input id="fModel" type="text" placeholder="ECOLITE..." oninput="filterEditTable()" style="width:110px;height:28px;font-size:11px;padding:4px 8px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:9px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em">설비군</span>
+        <select id="fType" onchange="filterEditTable()" style="width:90px;height:28px;font-size:11px;padding:2px 6px">
+          <option value="">전체</option>
+          <option>GENEVA</option><option>ECOLITE</option><option>HDW</option><option>SOURCE</option><option>개발설비</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:9px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em">라인/고객사</span>
+        <input id="fLine" type="text" placeholder="SPIL, ASE..." oninput="filterEditTable()" style="width:130px;height:28px;font-size:11px;padding:4px 8px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:9px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em">유통경로</span>
+        <select id="fRoute" onchange="filterEditTable()" style="width:80px;height:28px;font-size:11px;padding:2px 6px">
+          <option value="">전체</option>
+          <option value="10">🇰🇷 국내</option>
+          <option value="20">🌏 해외</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:9px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em">변경여부</span>
+        <select id="fChanged" onchange="filterEditTable()" style="width:90px;height:28px;font-size:11px;padding:2px 6px">
+          <option value="">전체</option>
+          <option value="lot">LOT변경</option>
+          <option value="qty">수량변경</option>
+          <option value="note">사유있음</option>
+        </select>
+      </div>
+    </div>
+    <div class="tbl-wrap" style="max-height:calc(100vh - 280px)">
       <table>
         <thead><tr>
           <th>유효LOT</th><th>A+0 납품일</th><th>생산완료일</th><th>W/O</th><th>모델코드</th><th>모델</th><th>설비군</th>
@@ -708,12 +745,9 @@ textarea{resize:vertical;line-height:1.6;}
       <textarea id="editNote" rows="2" style="width:100%;font-size:12px" placeholder="예: 고객사 변경, LOT 조정, 신규추가 등"></textarea>
     </div>
 
-    <div style="display:flex;gap:8px;justify-content:space-between">
-      <button class="btn btn-r btn-sm" onclick="deleteEditItem()">🗑 삭제</button>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-o" onclick="closeModal('mEditItem')">취소</button>
-        <button class="btn btn-p" onclick="applyEditItem()">✓ 저장</button>
-      </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-o" onclick="closeModal('mEditItem')">취소</button>
+      <button class="btn btn-p" onclick="applyEditItem()">✓ 저장</button>
     </div>
   </div>
 </div>
@@ -2286,8 +2320,16 @@ function saveCurrentAsBaseline(){
   baseData=[...curData.map(r=>({...r}))];
   localStorage.setItem('psk_base_v3',JSON.stringify(baseData));
   localStorage.setItem('psk_base_savedAt_v3',new Date().toLocaleString('ko'));
+
+  // 변경점 히스토리 초기화 (기준본 저장 = 새 달 시작)
+  analysisHist=[];
+  detailHist=[];
+  compareResult=[];
+  saveToStorage();
+
   updateBaselineBanner();
-  toast('✓ 기준본 저장됨. 다음달에 새 데이터 붙여넣으면 자동 비교됩니다');
+  toast('✓ 기준본 저장됨 · 변경점 히스토리 초기화됨. 이제부터 변경점을 새로 추적합니다');
+
   // Supabase에도 기준본 저장
   const refMonth=document.getElementById('rptRefMonth').value;
   (async()=>{
@@ -2369,7 +2411,7 @@ function renderDash(){
   const sorted=[...curData].sort((a,b)=>parseInt(effLot(a))-parseInt(effLot(b)));
   document.getElementById('dash-allRows').innerHTML=sorted.map((r)=>{
     const realIdx=curData.indexOf(r); // curData 원본 인덱스
-    return `<tr style="cursor:pointer" onclick="openEditItem(${realIdx})" title="클릭하여 편집">
+    return `<tr style="cursor:pointer" data-route="${r.route||10}" onclick="openEditItem(${realIdx})" title="클릭하여 편집">
     <td class="mono" style="color:var(--blue);font-weight:600">${effLot(r)}${r.chgLot?'<span class="badge bg-chg" style="margin-left:4px;font-size:8px">변경</span>':''}</td>
     <td class="mono">${getLotData(effLot(r))?fd(getLotData(effLot(r))[0]):'—'}</td>
     <td class="mono">${getLotData(effLot(r))?fd(getLotData(effLot(r))[1]):'—'}</td>
@@ -2388,23 +2430,54 @@ function renderDash(){
   }).join('')||'<tr><td colspan="14" class="empty">데이터 없음</td></tr>';
 }
 
-// ── 항목편집 검색 필터 ──
+// ── 항목편집 컬럼별 필터 ──
 function filterEditTable(){
-  const q=document.getElementById('editSearchInput').value.trim().toLowerCase();
-  const clearBtn=document.getElementById('editSearchClear');
-  const countEl=document.getElementById('editFilterCount');
-  if(clearBtn) clearBtn.style.display=q?'block':'none';
+  const fLot=(document.getElementById('fLot')?.value||'').trim().toLowerCase();
+  const fWo=(document.getElementById('fWo')?.value||'').trim().toLowerCase();
+  const fModel=(document.getElementById('fModel')?.value||'').trim().toLowerCase();
+  const fType=(document.getElementById('fType')?.value||'').toLowerCase();
+  const fLine=(document.getElementById('fLine')?.value||'').trim().toLowerCase();
+  const fRoute=(document.getElementById('fRoute')?.value||'');
+  const fChanged=(document.getElementById('fChanged')?.value||'');
 
   const rows=document.querySelectorAll('#dash-allRows tr');
-  let visible=0;
+  let visible=0, total=rows.length;
   rows.forEach(tr=>{
-    if(!q){tr.style.display='';visible++;return;}
-    const text=tr.textContent.toLowerCase();
-    const match=text.includes(q);
-    tr.style.display=match?'':'none';
-    if(match) visible++;
+    const cells=[...tr.querySelectorAll('td')].map(td=>td.textContent.trim().toLowerCase());
+    const lot=cells[0]||'';
+    const wo=cells[3]||'';
+    const model=cells[5]||'';
+    const type=cells[6]||'';
+    const line=cells[7]||'';
+    const route=tr.dataset.route||'';
+    const chgLot=cells[10]||'';
+    const chgQty=cells[11]||'';
+    const note=cells[12]||'';
+
+    const ok=
+      (!fLot||lot.includes(fLot))&&
+      (!fWo||wo.includes(fWo))&&
+      (!fModel||model.includes(fModel))&&
+      (!fType||type.includes(fType))&&
+      (!fLine||line.includes(fLine))&&
+      (!fRoute||route===fRoute)&&
+      (!fChanged||(
+        fChanged==='lot'?(chgLot&&chgLot!=='—'):
+        fChanged==='qty'?(chgQty&&chgQty!=='—'):
+        fChanged==='note'?(note&&note!=='—'):true
+      ));
+    tr.style.display=ok?'':'none';
+    if(ok) visible++;
   });
-  if(countEl) countEl.textContent=q?`${visible}건 검색됨`:'';
+  const countEl=document.getElementById('editFilterCount');
+  const hasFilter=fLot||fWo||fModel||fType||fLine||fRoute||fChanged;
+  if(countEl) countEl.textContent=hasFilter?`${visible} / ${total}건`:'';
+}
+
+function clearEditFilters(){
+  ['fLot','fWo','fModel','fLine'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['fType','fRoute','fChanged'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  filterEditTable();
 }
 
 // ── 변경 상세 팝업 ──
