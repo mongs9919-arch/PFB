@@ -1592,7 +1592,7 @@ function renderMonthDetail(){
 
   curData.forEach(r=>{
     const hasLotChg = r.chgLot && r.chgLot!==r.lot;
-    const hasQtyChg = !!r.chgQty;
+    const hasQtyChg = r.chgQty!==null && r.chgQty!==undefined;
     const hasNote = !!r.changeNote;
 
     if(!hasLotChg && !hasQtyChg && !hasNote) return;
